@@ -104,8 +104,6 @@ class BaslerGuiWindow(wx.Frame):
         self.Show()
 
     def InitUI(self):
-
-        # tlFactory = pylon.TlFactory.GetInstance()
         devices = pylon.TlFactory.GetInstance().EnumerateDevices()
         cameras = []
         for device in devices:
@@ -127,17 +125,17 @@ class BaslerGuiWindow(wx.Frame):
         self.cam_combo.SetSelection(self.selected_camera)
 
         self.connect_btn = wx.Button(panel, label="Connect")
-        self.connect_btn.Bind(wx.EVT_BUTTON, self.onConnect)
+        self.connect_btn.Bind(wx.EVT_BUTTON, self.OnConnect)
         sizer.Add(self.connect_btn, pos=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
 
         self.refresh_btn = wx.Button(panel, label="Refresh list")
-        self.refresh_btn.Bind(wx.EVT_BUTTON, self.onRefreshList)
+        self.refresh_btn.Bind(wx.EVT_BUTTON, self.OnRefreshList)
         sizer.Add(self.refresh_btn, pos=(2, 0),
                   flag=wx.EXPAND | wx.ALL, border=5)
 
         self.preview_btn = wx.Button(panel, label="Preview START")
-        self.preview_btn.Bind(wx.EVT_BUTTON, self.onPreview)
+        self.preview_btn.Bind(wx.EVT_BUTTON, self.OnPreview)
         sizer.Add(self.preview_btn, pos=(2, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
 
@@ -149,7 +147,6 @@ class BaslerGuiWindow(wx.Frame):
         self.capmode_combo.Bind(wx.EVT_COMBOBOX, self.OnCapModeCombo)
         self.capmode_combo.SetSelection(self.capture_mode)
 
-        # kontrolka meansuremetn_interval
         interval_ctrl_label = wx.StaticText(panel,
                                             label="Measurement interval (sec):")
         sizer.Add(interval_ctrl_label, pos=(14, 0),
@@ -185,11 +182,10 @@ class BaslerGuiWindow(wx.Frame):
                   flag=wx.EXPAND | wx.ALL, border=5)
 
         self.capture_btn = wx.Button(panel, label="Capture START")
-        self.capture_btn.Bind(wx.EVT_BUTTON, self.onCapture)
+        self.capture_btn.Bind(wx.EVT_BUTTON, self.OnCapture)
         sizer.Add(self.capture_btn, pos=(17, 0), span=(1, 2),
                   flag=wx.EXPAND | wx.ALL, border=5)
 
-        # kortrolka framerate
         self.framerate_ctrl_label = wx.StaticText(panel, label="Framerate (Hz):")
         sizer.Add(self.framerate_ctrl_label, pos=(4, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
@@ -202,7 +198,6 @@ class BaslerGuiWindow(wx.Frame):
         sizer.Add(self.framerate_slider, pos=(4, 1), span=(1, 1),
                   flag=wx.ALL, border=5)
 
-        # kortrolka exposure
         self.exposure_ctrl_label = wx.StaticText(panel, label="Exposure (us):")
         sizer.Add(self.exposure_ctrl_label, pos=(5, 0),  span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
@@ -215,7 +210,6 @@ class BaslerGuiWindow(wx.Frame):
         sizer.Add(self.exposure_slider, pos=(5, 1), span=(1, 1),
                   flag=wx.ALL, border=5)
 
-        # # kortrolka gain
         self.gain_ctrl_label = wx.StaticText(panel, label="Gain (dB):")
         sizer.Add(self.gain_ctrl_label, pos=(6, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
@@ -232,21 +226,20 @@ class BaslerGuiWindow(wx.Frame):
         sizer.Add(self.set_auto_exposure, pos=(7, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
         self.set_auto_exposure.SetBackgroundColour(wx.NullColour)
-        self.set_auto_exposure.Bind(wx.EVT_CHECKBOX, self.onEnableAutoExposure)
+        self.set_auto_exposure.Bind(wx.EVT_CHECKBOX, self.OnEnableAutoExposure)
 
         self.set_auto_gain = wx.CheckBox(panel, label="Auto Gain")
         sizer.Add(self.set_auto_gain, pos=(7, 1), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
         self.set_auto_gain.SetBackgroundColour(wx.NullColour)
-        self.set_auto_gain.Bind(wx.EVT_CHECKBOX, self.onEnableAutoGain)
+        self.set_auto_gain.Bind(wx.EVT_CHECKBOX, self.OnEnableAutoGain)
 
         self.set_roi = wx.CheckBox(panel, label="Set ROI")
         sizer.Add(self.set_roi, pos=(15, 3), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
         self.set_roi.SetBackgroundColour(wx.NullColour)
-        self.set_roi.Bind(wx.EVT_CHECKBOX, self.onEnableRoi)
+        self.set_roi.Bind(wx.EVT_CHECKBOX, self.OnEnableRoi)
 
-        # kontrolka roi_width
         roi_x_ctrl_label = wx.StaticText(panel, label="Center X:")
         sizer.Add(roi_x_ctrl_label, pos=(16, 3), span=(1, 1),
                   flag=wx.ALL | wx.ALIGN_CENTER, border=0)
@@ -255,7 +248,7 @@ class BaslerGuiWindow(wx.Frame):
                                     style=wx.SL_HORIZONTAL | wx.SL_LABELS)
         sizer.Add(self.roi_x_ctrl, pos=(17, 3), span=(1, 1),
                   flag=wx.ALL | wx.ALIGN_CENTER, border=0)
-        self.roi_x_ctrl.Bind(wx.EVT_SCROLL, self.onSetRoiX)
+        self.roi_x_ctrl.Bind(wx.EVT_SCROLL, self.OnSetRoiX)
 
         roi_y_ctrl_label = wx.StaticText(panel, label="Center Y:")
         sizer.Add(roi_y_ctrl_label, pos=(18, 3), span=(1, 1),
@@ -265,7 +258,7 @@ class BaslerGuiWindow(wx.Frame):
                                     style=wx.SL_HORIZONTAL | wx.SL_LABELS)
         sizer.Add(self.roi_y_ctrl, pos=(19, 3), span=(1, 1),
                   flag=wx.ALL | wx.ALIGN_CENTER, border=0)
-        self.roi_y_ctrl.Bind(wx.EVT_SCROLL, self.onSetRoiY)
+        self.roi_y_ctrl.Bind(wx.EVT_SCROLL, self.OnSetRoiY)
 
         roi_width_ctrl_label = wx.StaticText(panel, label="Width:")
         sizer.Add(roi_width_ctrl_label, pos=(16, 4), span=(1, 1),
@@ -275,7 +268,7 @@ class BaslerGuiWindow(wx.Frame):
                                         style=wx.SL_HORIZONTAL | wx.SL_LABELS)
         sizer.Add(self.roi_width_ctrl, pos=(17, 4), span=(1, 1),
                   flag=wx.ALL | wx.ALIGN_CENTER, border=0)
-        self.roi_width_ctrl.Bind(wx.EVT_SCROLL, self.onSetRoiWidth)
+        self.roi_width_ctrl.Bind(wx.EVT_SCROLL, self.OnSetRoiWidth)
 
         roi_height_ctrl_label = wx.StaticText(panel, label="Height:")
         sizer.Add(roi_height_ctrl_label, pos=(18, 4), span=(1, 1),
@@ -285,7 +278,7 @@ class BaslerGuiWindow(wx.Frame):
                                          style=wx.SL_HORIZONTAL | wx.SL_LABELS)
         sizer.Add(self.roi_height_ctrl, pos=(19, 4), span=(1, 1),
                   flag=wx.ALL | wx.ALIGN_CENTER, border=0)
-        self.roi_height_ctrl.Bind(wx.EVT_SCROLL, self.onSetRoiHeight)
+        self.roi_height_ctrl.Bind(wx.EVT_SCROLL, self.OnSetRoiHeight)
 
         self.roi_x_ctrl.Disable()
         self.roi_y_ctrl.Disable()
@@ -299,7 +292,6 @@ class BaslerGuiWindow(wx.Frame):
         sizer.Add(self.exportfile_ctrl, pos=(8, 1), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
 
-        # folder selction
         exportfolder_ctrl_label = wx.StaticText(panel, label="Export directory:")
         sizer.Add(exportfolder_ctrl_label, pos=(9, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
@@ -318,13 +310,13 @@ class BaslerGuiWindow(wx.Frame):
         sizer.Add(self.append_date, pos=(11, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
         self.append_date.SetBackgroundColour(wx.NullColour)
-        self.append_date.Bind(wx.EVT_CHECKBOX, self.onAppendDate)
+        self.append_date.Bind(wx.EVT_CHECKBOX, self.OnAppendDate)
 
         self.auto_index = wx.CheckBox(panel, label="Auto index")
         sizer.Add(self.auto_index, pos=(12, 0), span=(1, 1),
                   flag=wx.EXPAND | wx.ALL, border=5)
         self.auto_index.SetBackgroundColour(wx.NullColour)
-        self.auto_index.Bind(wx.EVT_CHECKBOX, self.onAutoIndex)
+        self.auto_index.Bind(wx.EVT_CHECKBOX, self.OnAutoIndex)
 
         self.index_ctrl = wx.TextCtrl(panel)
         self.index_ctrl.SetValue(str(1))
@@ -653,7 +645,7 @@ class BaslerGuiWindow(wx.Frame):
             self.index_ctrl.Disable()
         return
 
-    def onConnect(self, event):
+    def OnConnect(self, event):
 
         if self.camera_connected is False:
             tlFactory = pylon.TlFactory.GetInstance()
@@ -729,7 +721,7 @@ class BaslerGuiWindow(wx.Frame):
         print("Closing BaslerGUI")
         return
 
-    def onEnableAutoExposure(self, event):
+    def OnEnableAutoExposure(self, event):
         if self.camera_connected is True:
             self.auto_exposure_on = self.set_auto_exposure.GetValue()
             if self.auto_exposure_on is True:
@@ -740,7 +732,7 @@ class BaslerGuiWindow(wx.Frame):
                 self.exposure_slider.SetValue(self.camera.ExposureTime.Value)
                 self.exposure_slider.Enable()
 
-    def onEnableAutoGain(self, event):
+    def OnEnableAutoGain(self, event):
         if self.camera_connected is True:
             self.auto_gain_on = self.set_auto_gain.GetValue()
             if self.auto_gain_on is True:
@@ -751,7 +743,7 @@ class BaslerGuiWindow(wx.Frame):
                 self.gain_slider.SetValue(self.camera.Gain.Value)
                 self.gain_slider.Enable()
 
-    def onRefreshList(self, event):
+    def OnRefreshList(self, event):
 
         if self.camera_connected is False:
             self.selected_camera = 0
@@ -769,14 +761,14 @@ class BaslerGuiWindow(wx.Frame):
                                           "serial": device.GetSerialNumber()})
             self.cam_combo.SetSelection(self.selected_camera)
 
-    def onPreview(self, event):
+    def OnPreview(self, event):
         if self.camera_connected is True:
             if self.preview_on is True:
                 self.StopPreview()
             else:
                 self.StartPreview()
 
-    def onCapture(self, event):
+    def OnCapture(self, event):
         if self.current_step == 0:
             if self.capture_on is False:
                 self.StartCapture()
@@ -814,12 +806,11 @@ class BaslerGuiWindow(wx.Frame):
         if self.camera_connected is True:
             self.camera.ExposureTime.SetValue(self.exposure)
             resulting_framerate = self.camera.ResultingFrameRate.GetValue()
-            # print(resulting_framerate)
             if (resulting_framerate != self.framerate):
                 self.framerate = resulting_framerate
                 self.framerate_slider.SetValue(self.framerate)
 
-    def onAutoIndex(self, event):
+    def OnAutoIndex(self, event):
         if self.camera_connected is True:
             self.auto_index_on = self.auto_index.GetValue()
             if self.auto_index_on is True:
@@ -895,10 +886,10 @@ class BaslerGuiWindow(wx.Frame):
         resized = cv2.resize(histogram_image, size, interpolation=cv2.INTER_AREA)
         return resized
 
-    def onAppendDate(self, event):
+    def OnAppendDate(self, event):
         self.append_date_flag = self.append_date.GetValue()
 
-    def onEnableRoi(self, event):
+    def OnEnableRoi(self, event):
         self.roi_on = self.set_roi.GetValue()
         if self.roi_on is True:
             self.roi_x_ctrl.Enable()
@@ -911,28 +902,28 @@ class BaslerGuiWindow(wx.Frame):
             self.roi_width_ctrl.Disable()
             self.roi_height_ctrl.Disable()
 
-    def onSetRoiX(self, event):
+    def OnSetRoiX(self, event):
         new_roi_x = self.roi_x_ctrl.GetValue()
         if (new_roi_x + self.roi_width) < self.frame_width:
             self.roi_x = new_roi_x
         else:
             self.roi_x_ctrl.SetValue(self.roi_x)
 
-    def onSetRoiY(self, event):
+    def OnSetRoiY(self, event):
         new_roi_y = self.roi_y_ctrl.GetValue()
         if (new_roi_y + self.roi_height) < self.frame_height:
             self.roi_y = new_roi_y
         else:
             self.roi_y_ctrl.SetValue(self.roi_y)
 
-    def onSetRoiWidth(self, event):
+    def OnSetRoiWidth(self, event):
         new_roi_width = self.roi_width_ctrl.GetValue()
         if (self.roi_x + new_roi_width) < self.frame_width:
             self.roi_width = new_roi_width
         else:
             self.roi_width_ctrl.SetValue(self.roi_width)
 
-    def onSetRoiHeight(self, event):
+    def OnSetRoiHeight(self, event):
         new_roi_height = self.roi_height_ctrl.GetValue()
         if (self.roi_y + new_roi_height) < self.frame_height:
             self.roi_height = new_roi_height
@@ -1001,7 +992,6 @@ class BaslerGuiWindow(wx.Frame):
         output_path = []
         output_file_name = self.exportfile_ctrl.GetValue()
         output_folder_name = self.exportfolder_ctrl.GetValue()
-        # if sequence_length > 1:
         if len(output_folder_name) > 0:
             output_path = output_folder_name + "\\" + output_file_name
         else:
@@ -1086,7 +1076,6 @@ class BaslerGuiWindow(wx.Frame):
             height = self.frame_height
 
         if self.capture_mode == 3:
-            # capture_mode == 0
             frames_to_capture = 1
 
         buffer = np.zeros((frames_to_capture, height, width), np.uint8)
@@ -1103,7 +1092,8 @@ class BaslerGuiWindow(wx.Frame):
                                                         pylon.TimeoutHandling_ThrowException)
                 if grabResult.GrabSucceeded():
                     if self.roi_on is True:
-                        buffer[captured_frames, :, :] = grabResult.GetArray()[roi_min_row:roi_max_row, roi_min_col:roi_max_col].copy()
+                        buffer[captured_frames, :, :] = grabResult.GetArray()[roi_min_row:roi_max_row, 
+                                                                              roi_min_col:roi_max_col].copy()
                     else:
                         buffer[captured_frames, :, :] = grabResult.GetArray().copy()
                     captured_frames += 1
@@ -1134,8 +1124,6 @@ class BaslerGuiWindow(wx.Frame):
         frames_to_capture, height, width = buffer.shape
         date_time = time.strftime("%Y%m%d_%H%M%S")
         if capture_mode == 0:
-            # print("writing data")
-            # print(output_path)
             video_output_path = output_path + ".avi"
             print(f'Writing raw output video to {output_path}')
             video_writer = cv2.VideoWriter(video_output_path,
@@ -1181,12 +1169,10 @@ class BaslerGuiWindow(wx.Frame):
         if capture_mode == 2 or capture_mode == 4:
 
             file_name = output_path.split('\\')[-1]
-            # date_time = time.strftime("%Y%m%d_%H%M%S")
             file_name = file_name + "_" + date_time
 
             if capture_mode == 4:
                 video_output_path = output_path + "_" + date_time + ".avi"
-                # video_output_path = output_path + ".avi"
                 print(f'Writing raw output video to {video_output_path}')
                 video_writer = cv2.VideoWriter(video_output_path, cv2.VideoWriter_fourcc(*'RGBA'), self.framerate,
                                                (width, height), isColor=False)
@@ -1296,7 +1282,6 @@ class BaslerGuiWindow(wx.Frame):
                     self.StartPreview()
                     return
                 else:
-                    # self.cature_on = False
                     if self.index_ctrl.GetValue() == '':
                         self.index_ctrl.SetValue(str(1))
                         self.current_index = 1
